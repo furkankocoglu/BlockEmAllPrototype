@@ -1,5 +1,5 @@
 # BlockEmAllPrototype
  **3d basketball physic game.**
-![BeforeStart](BeforeStart.Jjpg)
+![BeforeStart](BeforeStart.jpg)
 ![AfterStart](AfterStart.jpg)
-![WhilePlay](WhilePlayt.jpg)
+![WhilePlay](WhilePlay.jpg)
