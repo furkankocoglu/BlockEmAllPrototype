@@ -7,25 +7,23 @@ public class BallCreator : MonoBehaviour
     [SerializeField]
     GameObject ballPrefab;
     float timer = 0;
-    public static Vector3 ballTargetPosition;
-    // Start is called before the first frame update
+    public static Vector3 ballTargetPosition;    
     void Start()
     {
-        ballTargetPosition = GameObject.Find("BallTarget").transform.position;
+        ballTargetPosition = GameObject.Find("BallTarget").transform.position;//getting ball target position after start game.
     }
-
-    // Update is called once per frame
+        
     void Update()
     {
         CreateBall();
     }
-    //Creating ball per 3 second.
+    //Creating one ball per 3 seconds and destroying 10 seconds later.
     void CreateBall()
     {
         timer += Time.deltaTime;
         if (timer>=3f)
         {
-            Instantiate(ballPrefab, transform.position, Quaternion.identity);
+            Destroy(Instantiate(ballPrefab, transform.position, Quaternion.identity),10f);
             timer = 0;
         }
     }

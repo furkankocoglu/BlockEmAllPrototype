@@ -20,7 +20,9 @@ public class CameraFollow : MonoBehaviour
     {
         if (Control.firsTouch)
         {
-            transform.position = Vector3.MoveTowards(transform.position, characterTransform.position + offset, followSpeed * Time.deltaTime);// smooth camera follow with first offset position.
+            transform.position = Vector3.MoveTowards(transform.position,
+                characterTransform.position + offset,
+                followSpeed * Time.deltaTime);// smooth camera follow with first offset position.
         }        
     }
 }

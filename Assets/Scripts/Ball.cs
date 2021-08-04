@@ -4,54 +4,75 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {        
-    float currentLerpTime;
-    [SerializeField]
-    float lerpTime;
-    bool lerpOver = false;
+    //float currentLerpTime;
+    //[SerializeField]
+    //float lerpTime;
+    //bool lerpOver = false;
+    Rigidbody ballRigidbody;
+    bool canCount = true;
     private void Start()
     {        
-        //calculating force to reach target, not working atm.
-        //Vector3 calculatedForce = new Vector3((BallCreator.ballTargetPosition.x-transform.position.x)*lerpTime+lerpTime*Physics.gravity.y*5f
-        //    ,(BallCreator.ballTargetPosition.y-transform.position.x) * lerpTime+lerpTime*Physics.gravity.y*5f,0);
-        //Debug.Log(calculatedForce);
-        //ballRigidbody.AddForce(calculatedForce,ForceMode.Impulse);
+        ballRigidbody = GetComponent<Rigidbody>();
+        ballRigidbody.velocity = new Vector3(
+            (BallCreator.ballTargetPosition.x - transform.position.x)*0.5f,
+            (BallCreator.ballTargetPosition.y - transform.position.y)*(3f/2f) + Mathf.Sqrt(Physics.gravity.y*-1*ballRigidbody.mass),
+            0);        
     }
-    private void Update()
-    {
+    //private void Update()
+    //{
 
-        BallToTarget();
+        //BallToTarget();
 
-    }
+    //}
     //Throw Ball To Target Position with sootherstep effect.
-    void BallToTarget()
-    {
-        if (!lerpOver)
-        {
+    //void BallToTarget()
+    //{
+    //    if (!lerpOver)
+    //    {
 
-            currentLerpTime += Time.deltaTime;
-            if (currentLerpTime > lerpTime)
-            {
-                currentLerpTime = lerpTime;
-            }
-            float t = currentLerpTime / lerpTime;
-            //t=t*t*t * (t * (6f * t - 15f) + 10f) smootherstep function
-            t = t * t * t * (t * (6f * t - 15f) + 10f);
-            transform.position = Vector3.Lerp(transform.position, BallCreator.ballTargetPosition, t);
-            if (Vector2.Distance(transform.position, BallCreator.ballTargetPosition) <= 1)
-            {
-                lerpOver = true;
-            }
+    //        currentLerpTime += Time.deltaTime;
+    //        if (currentLerpTime > lerpTime)
+    //        {
+    //            currentLerpTime = lerpTime;
+    //        }
+    //        float t = currentLerpTime / lerpTime;
+    //        //t=t*t*t * (t * (6f * t - 15f) + 10f) smootherstep function
+    //        t = t * t * t * (t * (6f * t - 15f) + 10f);
+    //        transform.position = Vector3.Lerp(transform.position, BallCreator.ballTargetPosition, t);
+    //        if (Vector2.Distance(transform.position, BallCreator.ballTargetPosition) <= 1)
+    //        {
+    //            lerpOver = true;
+    //        }
+    //    }
+    //}
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag=="Counter" && canCount)
+        {
+            LevelManager.instance.CountBall();
+            canCount = false;
         }
     }
     private void OnCollisionEnter(Collision collision)
     {
-        //checking whole colliders in character, if collission anyone stop lerp.
-        foreach (CapsuleCollider item in Control.ragdollCapsuleColliders)
+        //checking whole colliders in character, if collission anyone increase current ball count.
+        if (canCount)
         {
-            if (collision.collider==item)
+            foreach (Collider item in Control.ragdollCapsuleColliders)
             {
-                lerpOver = true;
+                Debug.Log(item.gameObject.name);
             }
-        }       
+            foreach (Collider item in Control.ragdollCapsuleColliders)
+            {
+                if (collision.collider == item)
+                {
+                    LevelManager.instance.IncreaseBall();
+                    canCount = false;
+                    Debug.Log("sayac="+LevelManager.instance.ballCount);
+                    break;
+                }
+            }
+        }
+        
     }
 }
